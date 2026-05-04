@@ -1,9 +1,11 @@
+import { buildConstituencyBreakdown } from '../constituency-breakdown';
+import { buildConstituencyMaster } from '../constituency-master';
 import { buildStateResult } from '../aggregate';
 import { normalizePartyId } from '../party-aliases';
 import { STATE_CODES, type StateCode } from '../states';
 import type { Snapshot } from '../types';
 
-const PARSER_VERSION = 'news18-analytic-data-v1';
+const PARSER_VERSION = 'news18-analytic-data-v3-master-ist-time';
 
 const BASE = 'https://elections-v3-api.news18.com/api/en/analytic-data';
 
@@ -19,16 +21,21 @@ interface PastYearRow {
   winner?: string;
   leadingParty?: string;
   leading?: boolean;
+  isLeading?: boolean;
   voteShare?: number;
 }
 
 interface AnalyticRow {
   past?: PastYearRow[];
   consName?: string;
+  acNo?: number;
+  consId?: string;
+  district?: string;
 }
 
 interface AnalyticResponse {
   status: boolean;
+  timeStamp?: string;
   data?: AnalyticRow[];
 }
 
@@ -68,7 +75,7 @@ export function aggregateConstituencyRows(rows: AnalyticRow[]): {
   return { tallies: map, declaredConstituencies, leadingConstituencies };
 }
 
-async function fetchStateRows(code: StateCode): Promise<AnalyticRow[]> {
+async function fetchStateRows(code: StateCode): Promise<{ rows: AnalyticRow[]; timeStamp?: string }> {
   const url = `${BASE}?shortState=${encodeURIComponent(code)}&type=AS`;
   const res = await fetch(url, { headers: DEFAULT_HEADERS, next: { revalidate: 0 } });
   if (!res.ok) throw new Error(`News18 ${code}: HTTP ${res.status}`);
@@ -76,23 +83,33 @@ async function fetchStateRows(code: StateCode): Promise<AnalyticRow[]> {
   if (!json.status || !Array.isArray(json.data)) {
     throw new Error(`News18 ${code}: invalid payload`);
   }
-  return json.data;
+  return { rows: json.data, timeStamp: typeof json.timeStamp === 'string' ? json.timeStamp : undefined };
 }
 
 export async function fetchNews18Snapshot(): Promise<Snapshot> {
   const states = {} as Snapshot['states'];
+  let sourceDataTime: string | undefined;
 
   for (const code of STATE_CODES) {
-    const rows = await fetchStateRows(code);
+    const { rows, timeStamp } = await fetchStateRows(code);
+    if (timeStamp && !sourceDataTime) sourceDataTime = timeStamp;
     const { tallies, declaredConstituencies, leadingConstituencies } = aggregateConstituencyRows(rows);
-    states[code] = buildStateResult(code, tallies, {
-      declaredConstituencies,
-      leadingConstituencies,
-    });
+    const { constituenciesByParty, countingUndeclared } = buildConstituencyBreakdown(rows);
+    const constituencyMaster = buildConstituencyMaster(rows);
+    states[code] = {
+      ...buildStateResult(code, tallies, {
+        declaredConstituencies,
+        leadingConstituencies,
+      }),
+      constituenciesByParty,
+      countingUndeclared,
+      constituencyMaster,
+    };
   }
 
   return {
     fetchedAt: new Date().toISOString(),
+    sourceDataTime,
     source: 'news18',
     parserVersion: PARSER_VERSION,
     states,

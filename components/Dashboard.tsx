@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import useSWR from 'swr';
 import type { Snapshot } from '@/lib/types';
 import { STATE_CODES } from '@/lib/states';
+import { formatIndiaDateTime } from '@/lib/format-time';
 import { LiveBadge } from './LiveBadge';
 import { StateTile } from './StateTile';
 
@@ -33,11 +34,7 @@ export function Dashboard() {
 
   const last = useMemo(() => {
     if (!data?.fetchedAt) return '';
-    try {
-      return new Date(data.fetchedAt).toLocaleString();
-    } catch {
-      return data.fetchedAt;
-    }
+    return formatIndiaDateTime(data.fetchedAt);
   }, [data?.fetchedAt]);
 
   return (
@@ -58,7 +55,10 @@ export function Dashboard() {
         </div>
         <div className="header-right">
           <LiveBadge isLive={isLive} onToggle={() => setIsLive(!isLive)} />
-          <div className="last-updated">Updated: {last || '—'}</div>
+          <div className="last-updated">Fetched: {last || '—'}</div>
+          {data?.sourceDataTime && (
+            <div className="source-line source-news18-time">News18 data time: {data.sourceDataTime}</div>
+          )}
           {data && (
             <div className="source-line">
               Source: {formatSource(data.source)} · parser {data.parserVersion}

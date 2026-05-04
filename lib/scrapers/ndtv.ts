@@ -63,9 +63,19 @@ export async function fetchNdtvSnapshot(): Promise<Snapshot | null> {
   for (const code of STATE_CODES) {
     const tallies = partial[code];
     if (tallies && tallies.size > 0) {
-      states[code] = buildStateResult(code, tallies);
+      states[code] = {
+        ...buildStateResult(code, tallies),
+        constituenciesByParty: {},
+        countingUndeclared: [],
+        constituencyMaster: [],
+      };
     } else {
-      states[code] = buildStateResult(code, new Map());
+      states[code] = {
+        ...buildStateResult(code, new Map()),
+        constituenciesByParty: {},
+        countingUndeclared: [],
+        constituencyMaster: [],
+      };
     }
   }
 

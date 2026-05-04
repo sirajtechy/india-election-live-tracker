@@ -9,6 +9,9 @@ import { LiveBadge } from './LiveBadge';
 import { AllianceCard } from './AllianceCard';
 import { SeatBar } from './SeatBar';
 import { ResultsCharts } from './ResultsCharts';
+import { ConstituencyBreakdown } from './ConstituencyBreakdown';
+import { ConstituencyMasterTable } from './ConstituencyMasterTable';
+import { formatIndiaDateTime } from '@/lib/format-time';
 import { partyColor } from '@/lib/party-colors';
 import { partyFullName } from '@/lib/party-names';
 
@@ -33,11 +36,7 @@ export default function StatePageClient({ code }: { code: StateCode }) {
 
   const last = useMemo(() => {
     if (!data?.fetchedAt) return '';
-    try {
-      return new Date(data.fetchedAt).toLocaleString();
-    } catch {
-      return data.fetchedAt;
-    }
+    return formatIndiaDateTime(data.fetchedAt);
   }, [data?.fetchedAt]);
 
   return (
@@ -67,7 +66,10 @@ export default function StatePageClient({ code }: { code: StateCode }) {
         </div>
         <div className="header-right">
           <LiveBadge isLive={isLive} onToggle={() => setIsLive(!isLive)} />
-          <div className="last-updated">Updated: {last || '—'}</div>
+          <div className="last-updated">Fetched: {last || '—'}</div>
+          {data?.sourceDataTime && (
+            <div className="source-line source-news18-time">News18 data time: {data.sourceDataTime}</div>
+          )}
           {data && (
             <div className="source-line">
               Source: {data.source} · {data.parserVersion}
@@ -146,6 +148,10 @@ export default function StatePageClient({ code }: { code: StateCode }) {
               </tbody>
             </table>
           </div>
+
+          <ConstituencyMasterTable result={result} />
+
+          <ConstituencyBreakdown result={result} />
         </>
       )}
 

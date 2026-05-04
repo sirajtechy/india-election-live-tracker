@@ -24,7 +24,12 @@ async function withRetries<T>(fn: () => Promise<T>, tries = 3, baseMs = 400): Pr
 function emptySnapshot(source: Snapshot['source']): Snapshot {
   const states = {} as Snapshot['states'];
   for (const code of STATE_CODES) {
-    states[code] = buildStateResult(code, new Map());
+    states[code] = {
+      ...buildStateResult(code, new Map()),
+      constituenciesByParty: {},
+      countingUndeclared: [],
+      constituencyMaster: [],
+    };
   }
   return {
     fetchedAt: new Date().toISOString(),
