@@ -22,45 +22,70 @@ body { font-family: 'Inter', sans-serif; background: #0f0f1a; color: #e8e8e8; mi
 .live-badge.paused .live-dot { background: #888; animation: none; }
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.2)} }
 .last-updated { font-size: 0.75rem; color: #777; }
+.source-line { font-size: 0.72rem; color: #666; margin-top: 4px; text-align: right; max-width: 280px; }
 
 /* Majority line */
 .majority-line { text-align: center; padding: 10px; background: #1a1a2e; border-radius: 8px; margin: 16px 0; font-size: 0.85rem; color: #aaa; }
 .majority-line strong { color: #FF9933; }
 
 /* Alliance cards */
-.alliance-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+.alliance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
 .alliance-card { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 20px; text-align: center; position: relative; transition: transform 0.2s; }
 .alliance-card:hover { transform: translateY(-2px); }
 .alliance-card.majority { border-color: #FF9933; box-shadow: 0 0 20px rgba(255,153,51,0.15); }
 .majority-badge { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #FF9933; color: #000; font-size: 0.65rem; font-weight: 700; padding: 2px 10px; border-radius: 10px; letter-spacing: 1px; }
 .alliance-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
-.alliance-seats { font-size: 3rem; font-weight: 800; line-height: 1; }
+.alliance-seats { font-size: 2.2rem; font-weight: 800; line-height: 1; }
 .alliance-seats-label { font-size: 0.8rem; color: #888; margin: 4px 0 12px; }
 .alliance-progress { background: #2a2a4a; border-radius: 4px; height: 6px; margin-bottom: 10px; overflow: hidden; }
 .progress-bar { height: 100%; border-radius: 4px; transition: width 0.5s; }
-.alliance-parties { font-size: 0.72rem; color: #777; }
+.alliance-parties { font-size: 0.68rem; color: #aaa; line-height: 1.45; }
+.alliance-code.muted { font-size: 0.65rem; color: #666; margin: -4px 0 8px; font-weight: 500; letter-spacing: 0.02em; }
+.alliance-party-chip { white-space: normal; }
+.alliance-sep { color: #555; }
 
-/* Tabs */
-.tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid #2a2a4a; }
-.tab { background: none; border: none; padding: 10px 20px; color: #888; cursor: pointer; font-size: 0.9rem; font-weight: 500; border-bottom: 3px solid transparent; margin-bottom: -1px; transition: all 0.2s; }
-.tab:hover { color: #ccc; }
-.tab.active { color: #FF9933; border-bottom-color: #FF9933; }
+.chart-tooltip { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 8px; padding: 10px 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+.chart-tooltip-title { font-size: 0.85rem; color: #eee; font-weight: 600; max-width: 260px; }
+.chart-tooltip-code { font-size: 0.75rem; color: #888; margin-top: 2px; }
+.chart-tooltip-seats { font-size: 0.8rem; color: #FF9933; margin-top: 6px; }
+.chart-footnote { font-size: 0.72rem; color: #666; margin-top: 10px; }
 
-/* Overview */
+/* Charts */
 .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
-.chart-card { background: #1a1a2e; border-radius: 12px; padding: 20px; border: 1px solid #2a2a4a; }
+.chart-card { background: #1a1a2e; border-radius: 12px; padding: 20px; border: 1px solid #2a2a4a; min-height: 300px; }
 .chart-card h3 { font-size: 0.9rem; color: #aaa; margin-bottom: 16px; font-weight: 500; }
 
 /* Seat bars */
 .seats-visualization { background: #1a1a2e; border-radius: 12px; padding: 20px; border: 1px solid #2a2a4a; }
 .seats-visualization h3 { font-size: 0.9rem; color: #aaa; margin-bottom: 16px; font-weight: 500; }
-.seat-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.party-label { display: flex; align-items: center; gap: 6px; width: 60px; flex-shrink: 0; }
-.party-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.seat-bar-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+.party-label { display: flex; align-items: flex-start; gap: 8px; flex: 0 1 240px; min-width: 120px; max-width: min(280px, 42vw); }
+.party-label-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.party-full { font-size: 0.78rem; color: #ddd; line-height: 1.25; font-weight: 500; }
+.party-code { font-size: 0.68rem; color: #888; }
+.party-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
 .party-name { font-size: 0.78rem; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.seat-subcounts { font-size: 0.72rem; color: #777; margin: 0 0 10px 22px; padding-left: 4px; }
 .bar-container { flex: 1; background: #2a2a4a; border-radius: 4px; height: 12px; overflow: hidden; }
 .bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s; min-width: 2px; }
 .seat-count { width: 40px; text-align: right; font-size: 0.82rem; font-weight: 600; color: #ddd; flex-shrink: 0; }
+
+/* States grid + tiles */
+.states-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.state-tile-link { text-decoration: none; color: inherit; display: block; }
+.state-card { background: #1a1a2e; border-radius: 12px; padding: 16px; border: 1px solid #2a2a4a; transition: border-color 0.2s, box-shadow 0.2s; cursor: pointer; }
+.state-card:hover { border-color: #FF9933; box-shadow: 0 0 16px rgba(255,153,51,0.12); }
+.state-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+.state-total { font-size: 0.75rem; color: #777; margin-bottom: 12px; }
+.state-bars { display: flex; flex-direction: column; gap: 8px; }
+.state-bar-item { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; }
+.state-bar-item-stacked { align-items: flex-start; }
+.state-party-line { flex: 1; min-width: 0; font-weight: 500; }
+.state-party-full { display: block; font-size: 0.7rem; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.state-bar-item > span:last-child { width: 28px; text-align: right; color: #aaa; flex-shrink: 0; }
+.mini-bar { flex: 1; background: #2a2a4a; border-radius: 3px; height: 8px; overflow: hidden; }
+.mini-bar > div { height: 100%; border-radius: 3px; min-width: 2px; }
+.leading-alliance { font-size: 0.78rem; color: #FFD700; margin-bottom: 8px; line-height: 1.35; }
 
 /* Parties table */
 .parties-table { overflow-x: auto; }
@@ -68,7 +93,9 @@ body { font-family: 'Inter', sans-serif; background: #0f0f1a; color: #e8e8e8; mi
 .parties-table th { padding: 12px 16px; text-align: left; font-size: 0.8rem; color: #888; font-weight: 500; background: #12122a; text-transform: uppercase; letter-spacing: 0.5px; }
 .parties-table td { padding: 12px 16px; font-size: 0.88rem; border-top: 1px solid #2a2a4a; }
 .parties-table tr:hover td { background: #1e1e38; }
-.parties-table td:first-child { display: flex; align-items: center; gap: 8px; }
+.party-cell { display: flex; align-items: flex-start; gap: 10px; }
+.party-table-full { font-size: 0.88rem; color: #e0e0e0; line-height: 1.35; }
+.party-table-code { font-size: 0.72rem; color: #888; margin-top: 2px; }
 .num { text-align: right; }
 .leading { color: #FFD700; }
 .bold { font-weight: 700; }
@@ -77,38 +104,17 @@ body { font-family: 'Inter', sans-serif; background: #0f0f1a; color: #e8e8e8; mi
 .alliance-tag.india { background: rgba(0,191,255,0.15); color: #00BFFF; }
 .alliance-tag.others { background: rgba(149,165,166,0.15); color: #95A5A6; }
 
-/* States */
-.states-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-.state-card { background: #1a1a2e; border-radius: 12px; padding: 16px; border: 1px solid #2a2a4a; }
-.state-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
-.state-total { font-size: 0.75rem; color: #777; margin-bottom: 12px; }
-.state-bars { display: flex; flex-direction: column; gap: 8px; }
-.state-bar-item { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; }
-.state-bar-item > span:first-child { width: 40px; font-weight: 500; }
-.mini-bar { flex: 1; background: #2a2a4a; border-radius: 3px; height: 8px; overflow: hidden; }
-.mini-bar > div { height: 100%; border-radius: 3px; min-width: 2px; }
-.state-bar-item > span:last-child { width: 24px; text-align: right; color: #aaa; }
-
-/* Timeline */
-.timeline { position: relative; padding-left: 20px; }
-.timeline::before { content: ''; position: absolute; left: 80px; top: 0; bottom: 0; width: 2px; background: #2a2a4a; }
-.timeline-item { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px; position: relative; }
-.timeline-time { width: 64px; font-size: 0.78rem; color: #888; flex-shrink: 0; padding-top: 2px; text-align: right; }
-.timeline-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; z-index: 1; }
-.timeline-item.info .timeline-dot { background: #555; }
-.timeline-item.trend .timeline-dot { background: #00BFFF; }
-.timeline-item.milestone .timeline-dot { background: #FF9933; box-shadow: 0 0 8px rgba(255,153,51,0.5); }
-.timeline-item.result .timeline-dot { background: #27AE60; box-shadow: 0 0 8px rgba(39,174,96,0.5); }
-.timeline-event { font-size: 0.88rem; color: #ddd; padding-top: 2px; line-height: 1.5; }
-.timeline-item.milestone .timeline-event { font-weight: 600; color: #FF9933; }
-.timeline-item.result .timeline-event { font-weight: 700; color: #27AE60; font-size: 1rem; }
+.back-link { display: inline-block; margin-bottom: 16px; color: #FF9933; font-size: 0.88rem; text-decoration: none; }
+.back-link:hover { text-decoration: underline; }
 
 /* Footer */
 .footer { text-align: center; padding: 30px 0 0; font-size: 0.75rem; color: #555; border-top: 1px solid #2a2a4a; margin-top: 40px; }
 
+.loading { text-align: center; padding: 48px; color: #888; }
+.error-box { background: #2a1a1a; border: 1px solid #c0392b; border-radius: 8px; padding: 16px; color: #e74c3c; margin: 16px 0; }
+
 @media (max-width: 768px) {
   .title { font-size: 1.2rem; }
-  .alliance-grid { grid-template-columns: 1fr; }
   .charts-grid { grid-template-columns: 1fr; }
-  .alliance-seats { font-size: 2rem; }
+  .alliance-seats { font-size: 1.8rem; }
 }
